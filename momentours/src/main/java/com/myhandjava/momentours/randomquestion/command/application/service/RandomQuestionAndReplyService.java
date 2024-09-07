@@ -4,9 +4,9 @@ import com.myhandjava.momentours.randomquestion.command.application.dto.RandomQu
 import com.myhandjava.momentours.randomquestion.command.application.dto.RandomReplyDTO;
 
 public interface RandomQuestionAndReplyService {
-    void removeRandomReply(int replyNo);
-    void updateRandomReply(int replyNo, RandomReplyDTO modifyContent);
-    void registRandomReply(RandomReplyDTO randomReplyDTO) throws Exception;
-    RandomQuestionDTO getCurrentRandomQuestion(int coupleNo);
+    void removeRandomReply(int replyNo, int userNo);
+    void modifyRandomReply(int userNo, int replyNo, RandomReplyDTO modifyContent);
+    void registRandomReply(int coupleNo, int userNo, int questionNo, RandomReplyDTO randomReplyDTO) throws Exception;
+    RandomQuestionDTO findRandomQuestion(int coupleNo);
     RandomQuestionDTO saveNewQuestion(int coupleNo, String content) throws Exception;
 }

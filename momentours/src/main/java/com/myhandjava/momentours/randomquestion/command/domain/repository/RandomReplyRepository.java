@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface RandomReplyRepository extends JpaRepository<RandomReply, Integer> {
-    Optional<RandomReply> findByRandomReplyNo(int randomReplyNo);
+    Optional<RandomReply> findByRandomReplyNoAndRandomReplyUserNo(int randomReplyNo, int userNo);
 }

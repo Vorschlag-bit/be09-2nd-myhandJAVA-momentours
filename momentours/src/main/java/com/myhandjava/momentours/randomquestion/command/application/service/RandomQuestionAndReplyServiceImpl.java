@@ -10,7 +10,6 @@ import com.myhandjava.momentours.randomquestion.command.domain.repository.Random
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -44,9 +43,9 @@ public class RandomQuestionAndReplyServiceImpl implements RandomQuestionAndReply
 
     @Override
     @Transactional
-    public void removeRandomReply(int randomreplyno) {
+    public void removeRandomReply(int replyNo, int userNo) {
         RandomReply randomReply =
-                replyRepository.findByRandomReplyNo(randomreplyno)
+                replyRepository.findByRandomReplyNoAndRandomReplyUserNo(replyNo, userNo)
                         .orElseThrow(() -> new EntityNotFoundException("질문 답변이 존재하지 않습니다."));
 
         if (randomReply != null) {
@@ -57,30 +56,30 @@ public class RandomQuestionAndReplyServiceImpl implements RandomQuestionAndReply
 
     @Override
     @Transactional
-    public void updateRandomReply(int replyNo, RandomReplyDTO replyDTO) {
+    public void modifyRandomReply(int userNo, int replyNo, RandomReplyDTO replyDTO) {
         RandomReply randomReply =
-                replyRepository.findByRandomReplyNo(replyNo)
+                replyRepository.findByRandomReplyNoAndRandomReplyUserNo(userNo ,replyNo)
                         .orElseThrow(() -> new EntityNotFoundException("질문 답변이 존재하지 않습니다."));
         if (randomReply != null) {
             randomReply.setRandomReplyContent(replyDTO.getRandomReplyContent());
-            log.info("바뀐 답변 내용 확인: {}", randomReply);
             replyRepository.save(randomReply);
         }
     }
 
     @Override
     @Transactional
-    public void registRandomReply(RandomReplyDTO randomReplyDTO) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        RandomReply randomReply =
-                modelMapper.map(randomReplyDTO, RandomReply.class);
-        log.info("replyDTO -> Entity로 전환: {}" + randomReply);
+    public void registRandomReply(int coupleNo, int userNo, int questionNo,RandomReplyDTO randomReplyDTO) {
+        RandomReply randomReply = new RandomReply();
+        randomReply.setRandomReplyContent(randomReplyDTO.getRandomReplyContent());
+        randomReply.setRandomReplyUserNo(userNo);
+        randomReply.setRandomQuestionNo(questionNo);
+        randomReply.setRandomCoupleNo(randomReply.getRandomCoupleNo());
 
         replyRepository.save(randomReply);
     }
 
     @Override
-    public RandomQuestionDTO getCurrentRandomQuestion(int coupleNo) {
+    public RandomQuestionDTO findRandomQuestion(int coupleNo) {
         // 페이지 크기를 1로 설정하여 최신의 질문 1개만 조회
         Pageable pageable = PageRequest.of(0, 1);
         List<RandomQuestion> currentQuestion =
