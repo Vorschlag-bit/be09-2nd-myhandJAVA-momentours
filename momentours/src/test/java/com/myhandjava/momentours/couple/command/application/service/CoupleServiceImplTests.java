@@ -19,14 +19,13 @@ class CoupleServiceImplTests {
     @DisplayName("커플 생성할 때 정보 입력 테스트")
     @Test
     void inputCoupleInformation() {
-        int userNo1 = 9;
-        int userNo2 = 10;
+        int coupleNo = 1;
         CoupleDTO coupleDTO = new CoupleDTO();
         coupleDTO.setCouplePhoto("강아지.jpg");
         coupleDTO.setCoupleName("강아지 커플");
         coupleDTO.setCoupleStartDate(LocalDateTime.now());
 
-        assertDoesNotThrow(() -> coupleService.inputCoupleInfo(userNo1, userNo2, coupleDTO));
+        assertDoesNotThrow(() -> coupleService.inputCoupleInfo(coupleNo, coupleDTO));
     }
 
     @DisplayName("커플 정보 수정 테스트")

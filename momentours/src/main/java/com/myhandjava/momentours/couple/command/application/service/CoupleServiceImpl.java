@@ -43,22 +43,22 @@ public class CoupleServiceImpl implements CoupleService {
     @Transactional
     public int registCouple(int userNo1, int userNo2) {
         Couple newCouple = new Couple();
-        newCouple.setCoupleNo(userNo1);
+        newCouple.setCoupleUserNo1(userNo1);
         newCouple.setCoupleUserNo2(userNo2);
+        newCouple.setCoupleIsDeleted(0);
+        log.info("입력된 커플 정보: {}", newCouple);
         coupleRepository.save(newCouple);
         return newCouple.getCoupleNo();
     }
 
     @Transactional
     @Override
-    public void inputCoupleInfo(int userNo1, int userNo2, CoupleDTO couple) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        Couple newCouple = modelMapper.map(couple, Couple.class);
-        newCouple.setCoupleUserNo1(userNo1);
-        newCouple.setCoupleUserNo2(userNo2);
-
-        log.info("입력된 커플 정보: {}", newCouple);
-        coupleRepository.save(newCouple);
+    public void inputCoupleInfo(int coupleNo, CoupleDTO coupleInfo) {
+        Couple couple = coupleRepository.findByCoupleNo(coupleNo);
+        couple.setCoupleName(coupleInfo.getCoupleName());
+        couple.setCouplePhoto(coupleInfo.getCouplePhoto());
+        couple.setCoupleStartDate(coupleInfo.getCoupleStartDate());
+        coupleRepository.save(couple);
     }
 
     @Transactional
